@@ -16,4 +16,9 @@ module "compute" {
   depends_on = [ azurerm_resource_group.myrg ]
   web-subnet-id = module.networking.subnet-ids["web"]
   backend-subnet-id = module.networking.subnet-ids["backend"]
+  sql-name = "checkingoncemore01"
+  admin-login = "sqladmin"
+  admin-pass = "P@ssw0rd1234"
+  sql-db-name = "tryingoncemore"
+  sql-size-gb = 2
 }

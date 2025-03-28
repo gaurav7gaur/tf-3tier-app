@@ -31,3 +31,22 @@ variable "web-subnet-id" {
 variable "backend-subnet-id" {
   
 }
+variable "sql-name" {
+  
+}
+variable "admin-login" {
+  
+}
+variable "admin-pass" {
+  
+}
+
+variable "sql-db-name" {
+  
+}
+variable "sql-size-gb" {
+  
+}
+variable "sql-sku" {
+  default = null
+}
