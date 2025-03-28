@@ -1,0 +1,19 @@
+module "compute" {
+  source                = "./modules/compute"
+  app-service-plan-name = "${var.type}-service-plan"
+  rg-name               = azurerm_resource_group.myrg.name
+  location              = azurerm_resource_group.myrg.location
+  web-app-service-name  = "${var.type}-web-app"
+  back-app-name = "${var.type}-backend-app"
+  back-app-settings = {
+    "WEBSITE_RUN_FROM_PACKAGE" = "1"
+  }
+  web-app-settings = {
+    WEBSITE_RUN_FROM_PACKAGE = "1"
+  }
+  app-service-plan-sku = "P0v3"
+  app-os = "Linux"
+  depends_on = [ azurerm_resource_group.myrg ]
+  web-subnet-id = module.networking.subnet-ids["web"]
+  backend-subnet-id = module.networking.subnet-ids["backend"]
+}
