@@ -19,6 +19,7 @@ resource "azurerm_linux_web_app" "web-app" {
     type = "SystemAssigned"
   }
   virtual_network_subnet_id = var.web-subnet-id
+  depends_on = [ azurerm_service_plan.plan ]
 }
 
 resource "azurerm_linux_web_app" "back-app" {
@@ -34,11 +35,12 @@ resource "azurerm_linux_web_app" "back-app" {
     type = "SystemAssigned"
   }
   virtual_network_subnet_id = var.backend-subnet-id
+  depends_on = [ azurerm_service_plan.plan ]
 }
 
 resource "azurerm_mssql_server" "sql-paas" {
   name = var.sql-name
-  location = "northeurope" //var.location
+  location = var.location
   resource_group_name = var.rg-name
   version = "12.0"
   administrator_login = var.admin-login
@@ -51,4 +53,5 @@ resource "azurerm_mssql_database" "sql-db" {
   collation = "SQL_Latin1_General_CP1_CI_AS"
   license_type = "LicenseIncluded"
   max_size_gb = var.sql-size-gb
+  depends_on = [ azurerm_mssql_server.sql-paas ]
 }

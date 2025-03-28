@@ -1,5 +1,7 @@
 module "compute" {
   source                = "./modules/compute"
+
+  depends_on = [ module.networking ]
   app-service-plan-name = "${var.type}-service-plan"
   rg-name               = azurerm_resource_group.myrg.name
   location              = azurerm_resource_group.myrg.location
@@ -13,7 +15,6 @@ module "compute" {
   }
   app-service-plan-sku = "P0v3"
   app-os = "Linux"
-  depends_on = [ azurerm_resource_group.myrg ]
   web-subnet-id = module.networking.subnet-ids["web"]
   backend-subnet-id = module.networking.subnet-ids["backend"]
   sql-name = "checkingoncemore01"

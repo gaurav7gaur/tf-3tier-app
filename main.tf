@@ -20,5 +20,5 @@ variable "type" {
 
 resource "azurerm_resource_group" "myrg" {
   name     = "${var.type}-rg"
-  location = "centralus"
+  location = "northeurope"
 }
