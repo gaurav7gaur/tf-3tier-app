@@ -45,6 +45,7 @@ resource "azurerm_mssql_server" "sql-paas" {
   version = "12.0"
   administrator_login = var.admin-login
   administrator_login_password = var.admin-pass
+  
 }
 
 resource "azurerm_mssql_database" "sql-db" {
@@ -53,5 +54,20 @@ resource "azurerm_mssql_database" "sql-db" {
   collation = "SQL_Latin1_General_CP1_CI_AS"
   license_type = "LicenseIncluded"
   max_size_gb = var.sql-size-gb
+  depends_on = [ azurerm_mssql_server.sql-paas ]
+}
+
+
+resource "azurerm_private_endpoint" "pvt-ep-sql" {
+  name = "${var.sql-name}-pvt-ep"
+  location = var.location
+  resource_group_name = var.rg-name
+  subnet_id = var.db-subnet-id
+  private_service_connection {
+    name = "${var.sql-name}-connec"
+    is_manual_connection = false
+    private_connection_resource_id = azurerm_mssql_server.sql-paas.id
+    subresource_names = ["sqlserver"]
+  }
   depends_on = [ azurerm_mssql_server.sql-paas ]
 }

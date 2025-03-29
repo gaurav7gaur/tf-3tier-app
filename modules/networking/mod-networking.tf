@@ -12,6 +12,22 @@ resource "azurerm_subnet" "subnet" {
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes = [each.value]
   depends_on = [ azurerm_virtual_network.vnet ]
+  
+  dynamic "delegation" {
+    for_each = each.key == "web" || each.key == "backend" ? [1] : []
+    content {
+      name = "delegation-to-app-service"
+      service_delegation {
+        name = "Microsoft.Web/serverFarms"
+        actions = [
+          "Microsoft.Network/virtualNetworks/subnets/action"
+        ]
+      }
+    }
+  }
+  
+  
+  /*
   delegation {
     name = "delegation-to-app-service"
     service_delegation {
@@ -21,6 +37,7 @@ resource "azurerm_subnet" "subnet" {
       ]
     }
   }
+  */
 
 }
 

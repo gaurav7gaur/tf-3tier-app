@@ -50,3 +50,6 @@ variable "sql-size-gb" {
 variable "sql-sku" {
   default = null
 }
+variable "db-subnet-id" {
+  
+}

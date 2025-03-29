@@ -11,5 +11,5 @@ module "networking" {
     backend             = "29.0.3.0/24"
     db                  = "29.0.4.0/24"
   }
-  depends_on = [ azurerm_resource_group.myrg ]
+  depends_on = [azurerm_resource_group.myrg]
 }
