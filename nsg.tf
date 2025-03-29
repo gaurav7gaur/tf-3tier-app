@@ -52,7 +52,7 @@ module "nsgs" {
       }
     ],
     "web-nsg" = [
-        {
+      {
         name                       = "Allow-app-gateway-in"
         priority                   = 150
         direction                  = "Inbound"
@@ -108,7 +108,7 @@ module "nsgs" {
         destination_port_range     = "443"
         source_address_prefix      = tolist(module.networking.subnet-address-range["web"])[0]
         destination_address_prefix = tolist(module.networking.subnet-address-range["backend"])[0]
-      },{
+        }, {
         name                       = "Allow-DB-in"
         priority                   = 175
         direction                  = "Inbound"
@@ -158,14 +158,14 @@ module "nsgs" {
   }
 
   nsg-assoc = {
-   /*
+    /*
     "firewall-nsg" = {
       subnet-id = module.networking.subnet-ids["AzureFirewallSubnet"]
     },
-    */
     "app-gateway-nsg" = {
       subnet-id = module.networking.subnet-ids["application-gateway"]
     },
+    */
     "web-nsg" = {
       subnet-id = module.networking.subnet-ids["web"]
     },
