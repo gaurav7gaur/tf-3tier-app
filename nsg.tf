@@ -53,13 +53,24 @@ module "nsgs" {
     ],
     "web-nsg" = [
       {
-        name                       = "Allow-app-gateway-in"
+        name                       = "Allow-app-gateway-in-443"
         priority                   = 150
         direction                  = "Inbound"
         access                     = "Allow"
         protocol                   = "*"
         source_port_range          = "*"
         destination_port_range     = "443"
+        source_address_prefix      = tolist(module.networking.subnet-address-range["application-gateway"])[0]
+        destination_address_prefix = tolist(module.networking.subnet-address-range["web"])[0]
+      },
+      {
+        name                       = "Allow-app-gateway-in-80"
+        priority                   = 151
+        direction                  = "Inbound"
+        access                     = "Allow"
+        protocol                   = "*"
+        source_port_range          = "*"
+        destination_port_range     = "80"
         source_address_prefix      = tolist(module.networking.subnet-address-range["application-gateway"])[0]
         destination_address_prefix = tolist(module.networking.subnet-address-range["web"])[0]
       },
@@ -75,13 +86,24 @@ module "nsgs" {
         destination_address_prefix = "*"
       },
       {
-        name                       = "Allow-Backend-in"
+        name                       = "Allow-Backend-in-443"
         priority                   = 175
         direction                  = "Inbound"
         access                     = "Allow"
         protocol                   = "*"
         source_port_range          = "*"
         destination_port_range     = "443"
+        source_address_prefix      = tolist(module.networking.subnet-address-range["backend"])[0]
+        destination_address_prefix = tolist(module.networking.subnet-address-range["web"])[0]
+      },
+      {
+        name                       = "Allow-Backend-in-80"
+        priority                   = 176
+        direction                  = "Inbound"
+        access                     = "Allow"
+        protocol                   = "*"
+        source_port_range          = "*"
+        destination_port_range     = "80"
         source_address_prefix      = tolist(module.networking.subnet-address-range["backend"])[0]
         destination_address_prefix = tolist(module.networking.subnet-address-range["web"])[0]
       },
@@ -99,7 +121,7 @@ module "nsgs" {
     ],
     "backend-nsg" = [
       {
-        name                       = "Allow-WebApp-In"
+        name                       = "Allow-WebApp-In-443"
         priority                   = 150
         direction                  = "Inbound"
         access                     = "Allow"
@@ -108,7 +130,19 @@ module "nsgs" {
         destination_port_range     = "443"
         source_address_prefix      = tolist(module.networking.subnet-address-range["web"])[0]
         destination_address_prefix = tolist(module.networking.subnet-address-range["backend"])[0]
-        }, {
+      },
+      {
+        name                       = "Allow-WebApp-In-80"
+        priority                   = 151
+        direction                  = "Inbound"
+        access                     = "Allow"
+        protocol                   = "*"
+        source_port_range          = "*"
+        destination_port_range     = "80"
+        source_address_prefix      = tolist(module.networking.subnet-address-range["web"])[0]
+        destination_address_prefix = tolist(module.networking.subnet-address-range["backend"])[0]
+      },
+      {
         name                       = "Allow-DB-in"
         priority                   = 175
         direction                  = "Inbound"

@@ -42,6 +42,8 @@ resource "azurerm_application_gateway" "ag" {
   frontend_ip_configuration {
     name = local.frontend_ip_configuration_name
     public_ip_address_id = azurerm_public_ip.ag-pip.id
+    #subnet_id = var.ag-subnet-id
+    private_ip_address_allocation = "Dynamic"
   }
   backend_address_pool {
     name = local.backend_address_pool_name
@@ -90,4 +92,11 @@ resource "azurerm_firewall" "fw" {
     subnet_id = var.fw-subnet-id
   }
   depends_on = [ azurerm_public_ip.fw-pip ]
+}
+
+
+resource "azurerm_firewall_policy" "policy" {
+  name = "firewall-policy"
+  location = var.location
+  resource_group_name = var.rg-name
 }
