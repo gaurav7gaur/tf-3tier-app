@@ -15,7 +15,7 @@ provider "azurerm" {
 }
 
 variable "type" {
-  default = "mod"
+  default = "tf-gg"
 }
 
 resource "azurerm_resource_group" "myrg" {
