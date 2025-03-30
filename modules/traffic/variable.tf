@@ -16,3 +16,9 @@ variable "ag-subnet-id" {
 variable "web-app-hostname" {
   
 }
+variable "fw-name" {
+  
+}
+variable "fw-subnet-id" {
+  
+}

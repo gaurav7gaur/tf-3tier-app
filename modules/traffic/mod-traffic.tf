@@ -78,3 +78,16 @@ resource "azurerm_application_gateway" "ag" {
   depends_on = [ azurerm_public_ip.ag-pip ]
 }
 
+resource "azurerm_firewall" "fw" {
+  name = var.fw-name
+  location = var.location
+  resource_group_name = var.rg-name
+  sku_name = "AZFW_VNet"
+  sku_tier = "Standard"
+  ip_configuration {
+    name = "config"
+    public_ip_address_id = azurerm_public_ip.fw-pip.id
+    subnet_id = var.fw-subnet-id
+  }
+  depends_on = [ azurerm_public_ip.fw-pip ]
+}
