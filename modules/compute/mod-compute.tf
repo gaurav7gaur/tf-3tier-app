@@ -71,3 +71,37 @@ resource "azurerm_private_endpoint" "pvt-ep-sql" {
   }
   depends_on = [azurerm_mssql_server.sql-paas]
 }
+
+resource "azurerm_mssql_firewall_rule" "my-ip" {
+  name = "whitelist-my-ip"
+  server_id = azurerm_mssql_server.sql-paas.id
+  start_ip_address = "49.36.144.57"
+  end_ip_address = "49.36.144.57"
+}
+
+resource "null_resource" "seed_sql_data" {
+  provisioner "local-exec" {
+    command = <<EOT
+      pwsh -Command "
+      $serverName = '${azurerm_mssql_server.sql-paas.fully_qualified_domain_name}';
+      $databaseName = '${azurerm_mssql_database.sql-db.name}';
+      $username = '${var.admin-login}';
+      $password = '${var.admin-pass}';
+      $connectionString = \"
+        Server=$serverName;Database=$databaseName;User Id=$username;Password=$password;Encrypt=True;TrustServerCertificate=False;\";
+      $query = \"
+        CREATE TABLE SampleTable (
+          ID INT PRIMARY KEY IDENTITY(1,1),
+          Name NVARCHAR(50),
+          Value NVARCHAR(50)
+        );
+        INSERT INTO SampleTable (Name, Value)
+        VALUES ('Test1', 'Value1'), ('Test2', 'Value2');
+      \";
+      Invoke-Sqlcmd -ConnectionString $connectionString -Query $query;
+      "
+    EOT
+  }
+
+  depends_on = [azurerm_mssql_database.sql-db]
+}
